@@ -6,6 +6,9 @@ import javafx.scene.control.TextField;
 
 public class ControladorCalculadora {
 
+    private static final String HOST_SERVIDOR = "127.0.0.1";
+    private static final int PUERTO_SERVIDOR = 5000;
+
     @FXML
     private TextField txtN1;
 
@@ -15,7 +18,7 @@ public class ControladorCalculadora {
     @FXML
     private Label lblResultado;
 
-    private ModeloCalculadora calc = new ModeloCalculadora();
+    private final ClienteUDP clienteUDP = new ClienteUDP();
 
     private double getN1() {
         return Double.parseDouble(txtN1.getText());
@@ -27,25 +30,48 @@ public class ControladorCalculadora {
 
     @FXML
     private void sumar() {
-        lblResultado.setText(String.valueOf(calc.sumar(getN1(), getN2())));
+        procesarOperacion("SUMAR");
     }
 
     @FXML
     private void restar() {
-        lblResultado.setText(String.valueOf(calc.restar(getN1(), getN2())));
+        procesarOperacion("RESTAR");
     }
 
     @FXML
     private void multiplicar() {
-        lblResultado.setText(String.valueOf(calc.multiplicar(getN1(), getN2())));
+        procesarOperacion("MULTIPLICAR");
     }
 
     @FXML
     private void dividir() {
+        procesarOperacion("DIVIDIR");
+    }
+
+    private void procesarOperacion(String operacion) {
         try {
-            lblResultado.setText(String.valueOf(calc.dividir(getN1(), getN2())));
+            String resultado;
+            switch (operacion) {
+                case "SUMAR":
+                    resultado = clienteUDP.sumar(HOST_SERVIDOR, PUERTO_SERVIDOR, getN1(), getN2());
+                    break;
+                case "RESTAR":
+                    resultado = clienteUDP.restar(HOST_SERVIDOR, PUERTO_SERVIDOR, getN1(), getN2());
+                    break;
+                case "MULTIPLICAR":
+                    resultado = clienteUDP.multiplicar(HOST_SERVIDOR, PUERTO_SERVIDOR, getN1(), getN2());
+                    break;
+                case "DIVIDIR":
+                    resultado = clienteUDP.dividir(HOST_SERVIDOR, PUERTO_SERVIDOR, getN1(), getN2());
+                    break;
+                default:
+                    resultado = "Operacion no valida";
+            }
+            lblResultado.setText(resultado);
+        } catch (NumberFormatException e) {
+            lblResultado.setText("Ingresa numeros validos");
         } catch (Exception e) {
-            lblResultado.setText(e.getMessage());
+            lblResultado.setText("Error: " + e.getMessage());
         }
     }
 }

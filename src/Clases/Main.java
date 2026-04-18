@@ -16,7 +16,7 @@ public class Main extends Application {
 
         Scene scene = new Scene(loader.load());
 
-        stage.setTitle("Calculadora Funcional");
+        stage.setTitle("Calculadora Cliente UDP");
         stage.setScene(scene);
         stage.show();
     }

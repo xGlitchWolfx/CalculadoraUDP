@@ -1,23 +1,41 @@
 package Clases;
 
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
+
 public class ModeloCalculadora {
 
-    public double sumar(double a, double b) {
-        return a + b;
-    }
+    private static final int TAMANIO_BUFFER = 1024;
+    private static final int TIMEOUT_MS = 3000;
 
-    public double restar(double a, double b) {
-        return a - b;
-    }
+    public String enviarOperacion(String host, int puerto, String operacion, double a, double b) throws Exception {
+        String mensaje = operacion + ";" + a + ";" + b;
+        byte[] datosEnvio = mensaje.getBytes(StandardCharsets.UTF_8);
 
-    public double multiplicar(double a, double b) {
-        return a * b;
-    }
+        try (DatagramSocket socket = new DatagramSocket()) {
+            socket.setSoTimeout(TIMEOUT_MS);
 
-    public double dividir(double a, double b) {
-        if (b == 0) {
-            throw new ArithmeticException("No se puede dividir para 0");
+            InetAddress direccion = InetAddress.getByName(host);
+            DatagramPacket paqueteEnvio = new DatagramPacket(
+                    datosEnvio,
+                    datosEnvio.length,
+                    direccion,
+                    puerto
+            );
+            socket.send(paqueteEnvio);
+
+            byte[] bufferRespuesta = new byte[TAMANIO_BUFFER];
+            DatagramPacket paqueteRespuesta = new DatagramPacket(bufferRespuesta, bufferRespuesta.length);
+            socket.receive(paqueteRespuesta);
+
+            return new String(
+                    paqueteRespuesta.getData(),
+                    0,
+                    paqueteRespuesta.getLength(),
+                    StandardCharsets.UTF_8
+            );
         }
-        return a / b;
     }
 }
