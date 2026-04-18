@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Calculadora.iml" filepath="$PROJECT_DIR$/Calculadora.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Calculadora/Calculadora.iml" filepath="$PROJECT_DIR$/Calculadora/Calculadora.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/CalculadoraUDP.iml" filepath="$PROJECT_DIR$/.idea/CalculadoraUDP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ServidorUDP/ServidorUDP.iml" filepath="$PROJECT_DIR$/ServidorUDP/ServidorUDP.iml" />
     </modules>
   </component>
 </project>
